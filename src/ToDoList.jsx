@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ListItem from "./ListItem";
+import Filter from "./Filter";
 const ToDoList = () => {
     const [items, setItems] = useState([]);
     const [inputValue, setInputValue] = useState("");
@@ -11,10 +12,20 @@ const ToDoList = () => {
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
+
+    // 箭头函数, 如果函数体只有一行, 可以省略大括号和return关键字,如果使用大括号,则需要return关键字
     // const onComplete = (id) => {setItems(items.map((item) => {item.id === id && {...item, status:statusMap.done}}));};
     // const onDelete = (id) => {setItems(items.map((item) => {item.id === id && {...item, status:statusMap.deleted}}));};
     const onComplete = (id) => {setItems(items.map((item) => item.id === id ? {...item, status:statusMap.done}:item));};
     const onDelete = (id) => {setItems(items.map((item) => item.id === id ?{...item, status:statusMap.deleted}:item));};
+    const renderItem = (item) => (
+        <ListItem
+            key={item.id}
+            item={item}
+            onComplete={onComplete}
+            onDelete={onDelete}
+        />
+    );
     return (
         <>
             <header>
@@ -36,7 +47,8 @@ const ToDoList = () => {
                     setInputValue("");
                 }}>add</button>
             </div>
-            {items.map((item, index) => (<ListItem key={index} item={item} onComplete={onComplete} onDelete={onDelete} />))}
+            {/* {items.map((item, index) => (<ListItem key={index} item={item} onComplete={onComplete} onDelete={onDelete} />))} */}
+            <Filter items={items} render={renderItem} status={statusMap}/>
         </>
     );
 }
